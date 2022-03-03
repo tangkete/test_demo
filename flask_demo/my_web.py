@@ -40,7 +40,7 @@ class MyHttpWebServer(object):
             new_socket.close()
             return
         # 对接收的请求字节数据，转换成字符数据，进行解码
-        request_data = recv_data.decode('utf-8')
+        request_data = recv_data.decode('utf-8')  # request_data是字符串
         print("浏览器的请求数据：",request_data)
         request_array = request_data.split(' ', maxsplit=2) # maxsplit取前两个
         request_path = request_array[1] # 获取请求路径
@@ -74,6 +74,10 @@ class MyHttpWebServer(object):
                 # 返回响应头（字符）
                 if request_path.endswith(('.jpeg', 'webp')): # 判断请求的类型是否 jpeg和webp
                     response_type = 'image/webp'
+                if request_path.endswith('css'):
+                    response_type = 'text/css'
+                if request_path.endswith('js'):
+                    response_type = 'application/x-javascript'
                 response_first_line = 'HTTP/1.1 200 OK\r\n'
                 response_header = 'Content-Length: '+str(len(response_body))+'\r\n' \
                                   +'Content-Type: '+response_type+'; charset=UTF-8\r\n' \
@@ -111,7 +115,7 @@ class MyHttpWebServer(object):
 
 # web服务器程序的入口
 def run_main():
-    web_server = MyHttpWebServer(8080)
+    web_server = MyHttpWebServer(8899)
     web_server.start()
 
 if __name__ == '__main__':
