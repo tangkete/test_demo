@@ -44,7 +44,7 @@ class MyHttpWebServer(object):
         print("浏览器的请求数据：",request_data)
         request_array = request_data.split(' ', maxsplit=2) # maxsplit取前两个
         request_path = request_array[1] # 获取请求路径
-        print('request_path:',request_path)
+        # print('request_path:',request_path)
         if request_path == '/':
             request_path = '/index.html'
 
@@ -72,28 +72,31 @@ class MyHttpWebServer(object):
                 with open('static'+request_path, 'rb', ) as f:
                     response_body = f.read()
                 # 返回响应头（字符）
-                if request_path.endswith(('.jpeg', 'webp')): # 判断请求的类型是否 jpeg和webp
+                if request_path.endswith(('.jpeg', '.webp')): # 判断请求的类型是否 jpeg和webp
                     response_type = 'image/webp'
                 if request_path.endswith('css'):
                     response_type = 'text/css'
                 if request_path.endswith('js'):
                     response_type = 'application/x-javascript'
                 response_first_line = 'HTTP/1.1 200 OK\r\n'
-                response_header = 'Content-Length: '+str(len(response_body))+'\r\n' \
-                                  +'Content-Type: '+response_type+'; charset=UTF-8\r\n' \
-                                  +'Date: '+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+'\r\n' \
-                                  +'Server: MyServer\r\n'
+                response_header = MyFramework.respon_header(response_body, response_type=response_type)
+                # response_header = 'Content-Length: '+str(len(response_body))+'\r\n' \
+                #                   +'Content-Type: '+response_type+'; charset=UTF-8\r\n' \
+                #                   +'Date: '+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+'\r\n' \
+                #                   +'Server: MyServer\r\n'
 
             except Exception as e: # 客户端读取的文件不存在
                 print('访问文件路径不存在：',e)
                 with open('static/404.html', 'rb') as f:
                     response_body = f.read()  # 响应的主体页面（字节）
                 # 返回响应头（字符）
+                response_type = 'text/html'
                 response_first_line = 'HTTP/1.1 404 Not Found\r\n'
-                response_header = 'Content-Length: '+str(len(response_body))+'\r\n' \
-                                  +'Content-Type: text/html; charset=UTF-8\r\n' \
-                                  +'Date: '+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+'\r\n' \
-                                  +'Server: MyServer\r\n'
+                response_header = MyFramework.respon_header(response_body, response_type=response_type)
+                # response_header = 'Content-Length: '+str(len(response_body))+'\r\n' \
+                #                   +'Content-Type: '+response_type+'; charset=UTF-8\r\n' \
+                #                   +'Date: '+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+'\r\n' \
+                #                   +'Server: MyServer\r\n'
 
             finally:
                 # 组成响应数据，返回给客户端
@@ -106,7 +109,7 @@ class MyHttpWebServer(object):
         #循环多线程接受客户端的请求
         while True:
             new_socket, client_ip_post = self.socket_server.accept()
-            print('客户端的ip和端口：',client_ip_post)
+            # print('客户端的ip和端口：',client_ip_post)
             # 一个客户端的请求交给一个线程处理
             sub_thread = threading.Thread(target=self.handle_browser_request, args=(new_socket,))
             sub_thread.setDaemon(True) # 设置当前线程为守护线程

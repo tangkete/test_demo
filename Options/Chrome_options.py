@@ -9,13 +9,14 @@ class ChromeOptions:
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
         options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('window-size=1200x600')
+        options.add_argument('--headless')
+        # options.add_argument('window-size=1200x600')
         # 将浏览器默认设置为最大窗体
         # options.add_argument('start-maximized')
         # 设置默认窗体的启动大小
         # options.add_argument('window-size=400,2000')
         # 无头模式：虽然看不到，但是一切照旧，在一些特定场景下会失败
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         # 去掉默认的提示自动化信息：没啥用，一般没有什么影响。警告条可能会导致页面内容的遮挡或者挤压，影响自动化测试
         # options.add_experimental_option('excludeSwitches', ['enable-automation', 'enable-logging'])
         # 去掉控制台多余信息
