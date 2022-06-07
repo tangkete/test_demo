@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 from functools import wraps
+import pymysql
 '''
     自定义web框架：
     1、根据请求路径，动态响应对应的数据
@@ -81,11 +82,36 @@ def user_info():
 @requests_route('/index.html')
 def index():
     # 动态资源， 例：系统时间显示在页面,
-    date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-    # response_body = data
+    # date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+
+    """
+    1、从mysql中查询数据
+    :return:
+    """
+    conn = pymysql.connect(host='192.168.31.107', port=3306, user='root', password='123456', database='mydb', charset='utf8')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM DEPT1')
+    result = cursor.fetchall()
+    # print(result)
+    datas = ""
+    for row in result:
+            datas += '''<tr>
+                        <td>%s</td>
+                        <td>%s</td>
+                        <td>%s</td>
+                        <td>1</td>
+                        <td>2亿元</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td> <input type=button, value='删除'/> </td>
+                        </tr>
+                        '''%row
+    # print(datas)
+
     with open('template/index.html', 'r', encoding='utf-8') as f:
         response_body = f.read()
-    response_body = response_body.replace('{%dates%}',date)
+    response_body = response_body.replace('{%dates%}', datas)
     response_first_line = 'HTTP/1.1 200 OK\r\n'
     response_header = respon_header(response_body)
     response = (response_first_line + response_header + '\r\n').encode('utf-8') + response_body.encode('utf-8')
