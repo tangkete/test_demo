@@ -1,2 +1,4 @@
-i = 3;
-print(i)
+import sys, os
+
+path = os.path.abspath(__file__)
+print(path)
