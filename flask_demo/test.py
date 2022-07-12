@@ -18,9 +18,9 @@ class WebServer(object):
     def __init__(self,post):
 
         server_socket = socket(AF_INET, SOCK_STREAM)
-        server_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, True) # 允许端口复用
-        server_socket.bind(('', post))# 绑定端口
-        server_socket.listen(128) # 监听端口
+        server_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, True)  # 允许端口复用
+        server_socket.bind(('', post))  # 绑定端口
+        server_socket.listen(128)  # 监听端口
         self.server_socket = server_socket
 
 
